@@ -119,7 +119,8 @@ RUN source '/root/.bashrc' \
     && cmake --build build \
     && cmake --install build \
     && strip /build_root/qbittorrent-build/bin/qbittorrent-nox \
-    && timeout 5s /build_root/qbittorrent-build/bin/qbittorrent-nox \
+    && /build_root/qbittorrent-build/bin/qbittorrent-nox -v \
+    # && timeout 5s /build_root/qbittorrent-build/bin/qbittorrent-nox \
     # && cp build/install_manifest.txt /build_root/qbittorrent-build \
     && popd || exit 1 \
     && rm -rf -- "/build_root/qbee" \
