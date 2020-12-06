@@ -26,8 +26,8 @@ ENV boost_version='1.74.0' \
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
-    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
+    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
+    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir boost \
@@ -43,8 +43,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
-    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
+    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
+    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir libtorrent \
@@ -68,8 +68,8 @@ ENV qt_latest_tag_name='v5.15.1'
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
-    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
+    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
+    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && git_clone --branch "$qt_latest_tag_name" "https://github.com/qt/qtbase.git" qtbase \
@@ -87,8 +87,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
-    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
+    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
+    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && git_clone --branch "$qt_latest_tag_name" "https://github.com/qt/qttools.git" qttools \
@@ -106,10 +106,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
-    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
+    && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
     && mkdir qbee \
     && curl -sS "https://github.com/IceCodeNew/qBittorrent-Enhanced-Edition/archive/v4_3_x.tar.gz" | bsdtar -xf- -C qbee --strip-components 1 \
     && pushd qbee || exit 1 \
