@@ -26,7 +26,8 @@ RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir boost \
     && curl -sS "https://dl.bintray.com/boostorg/release/${boost_version}/source/boost_${boost_version//./_}.tar.bz2" | bsdtar -xf- -C boost --strip-components 1 \
     && pushd boost || exit 1 \
@@ -42,7 +43,8 @@ RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir libtorrent \
     && curl -sS "https://github.com/arvidn/libtorrent/archive/RC_1_2.tar.gz" | bsdtar -xf- -C libtorrent --strip-components 1 \
     && pushd libtorrent || exit 1 \
@@ -66,7 +68,8 @@ RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && git_clone --branch "$qt_latest_tag_name" "https://github.com/qt/qtbase.git" qtbase \
     && pushd qtbase || exit 1 \
     # && OPENSSL_LIBDIR='/build_root/qbittorrent-build/lib' OPENSSL_INCDIR='/build_root/qbittorrent-build/include' OPENSSL_LIBS='-lssl -lcrypto' ./configure -I "/build_root/qbittorrent-build/include" -L "/build_root/qbittorrent-build/lib" QMAKE_LFLAGS="$LDFLAGS" -release -c++std c++14 -no-feature-c++17 -prefix "/build_root/qbittorrent-build" -opensource -confirm-license -openssl-linked -qt-pcre -no-icu -no-iconv -no-feature-glib -no-feature-opengl -no-feature-dbus -no-feature-gui -no-feature-widgets -no-feature-testlib -no-compile-examples -static
@@ -79,16 +82,13 @@ RUN source '/root/.bashrc' \
 
 FROM qtbase AS qttools
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-### curl -sS -H "Accept: application/vnd.github.v3+json" \
-###     'https://api.github.com/repos/qt/qttools/tags?per_page=32' |
-###     grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
-###     sort -Vr | head -n 1
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && git_clone --branch "$qt_latest_tag_name" "https://github.com/qt/qttools.git" qttools \
     && pushd qttools || exit 1 \
     && "/build_root/qbittorrent-build/bin/qmake" -set prefix "/build_root/qbittorrent-build" \
@@ -106,11 +106,12 @@ RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches --static -static -I/build_root/qbittorrent-build/include" \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir qbee \
     && curl -sS "https://github.com/IceCodeNew/qBittorrent-Enhanced-Edition/archive/v4_3_x.tar.gz" | bsdtar -xf- -C qbee --strip-components 1 \
     && pushd qbee || exit 1 \
-    && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 -DOPENSSL_USE_STATIC_LIBS=TRUE -DOPENSSL_ROOT_DIR=/usr -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/lib/libz.a \
+    && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 -DOPENSSL_INCLUDE_DIR=/usr/include/openssl -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.a -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.a -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/lib/libz.a \
     # && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 \
     && cmake --build build \
     && popd || exit 1 \
