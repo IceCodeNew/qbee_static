@@ -11,6 +11,7 @@ RUN source '/root/.bashrc' \
     openssl openssl-dev openssl-libs-static \
     && apk --no-progress --no-cache upgrade \
     && rm -rf /var/cache/apk/* \
+    && rm -f /etc/alternatives/ld \
     && update-alternatives --remove-all ld \
     && type -P ld \
     && ld --version \
@@ -124,7 +125,7 @@ RUN source '/root/.bashrc' \
     && rm -rf -- "/build_root/qbee" \
     && dirs -c
 
-FROM quay.io/icecodenew/alpine:edge AS qbee-collection
+FROM quay.io/icecodenew/alpine:edge AS collection
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 # date +%s
 ARG cachebust=1607047147
