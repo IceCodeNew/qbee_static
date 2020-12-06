@@ -106,10 +106,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
-    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
-    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && export CXXFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include -std=c++14" \
     && export CFLAGS=" -O2 -pipe -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -fPIE --static -static -I/build_root/qbittorrent-build/include" \
+    && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-pie -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
+    # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-pie -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir qbee \
     && curl -sS "https://github.com/IceCodeNew/qBittorrent-Enhanced-Edition/archive/v4_3_x.tar.gz" | bsdtar -xf- -C qbee --strip-components 1 \
     && pushd qbee || exit 1 \
