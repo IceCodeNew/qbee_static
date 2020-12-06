@@ -1,6 +1,7 @@
 FROM quay.io/icecodenew/builder_image_x86_64-linux:alpine AS base
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-ENV PKG_CONFIG=/usr/bin/pkgconf \
+ENV build_base_date='2020-12-06' \
+    PKG_CONFIG=/usr/bin/pkgconf \
     PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig
 RUN source '/root/.bashrc' \
     && apk del --no-cache \
@@ -115,6 +116,20 @@ RUN source '/root/.bashrc' \
     # && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 -DCMAKE_EXE_LINKER_FLAGS="-static" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
     && for i in {1..4}; do sed -i -E 's![\ \"\'"'"'][^\ \"\'"'"']+?\.so[\ \"\'"'"']! !g' 'build/build.ninja'; done \
     && cmake --build build \
+    && cmake --install build \
+    && strip /build_root/qbittorrent-build/bin/qbittorrent-nox \
+    && timeout 5s /build_root/qbittorrent-build/bin/qbittorrent-nox \
+    # && cp build/install_manifest.txt /build_root/qbittorrent-build \
     && popd || exit 1 \
     && rm -rf -- "/build_root/qbee" \
     && dirs -c
+
+FROM quay.io/icecodenew/alpine:edge AS qbee-collection
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+# date +%s
+ARG cachebust=1607047147
+COPY --from=qbee /build_root/qbittorrent-build/bin/qbittorrent-nox /build_root/qbittorrent-build/bin/qbittorrent-nox
+RUN apk update; apk --no-progress --no-cache add \
+    bash coreutils curl file; \
+    apk --no-progress --no-cache upgrade; \
+    rm -rf /var/cache/apk/*
