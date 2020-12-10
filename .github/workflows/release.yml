@@ -2,8 +2,8 @@ name: Release
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "5 18 * * *"
+  # schedule:
+  #   - cron: "5 18 * * *"
   # label:
   #   types: [created, deleted]
 

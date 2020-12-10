@@ -13,8 +13,8 @@ RUN source '/root/.bashrc' \
     && rm -rf /var/cache/apk/* \
     && rm -f /etc/alternatives/ld \
     && update-alternatives --remove-all ld \
-    && type -P ld \
-    && ld --version \
+    # && type -P ld \
+    # && ld --version \
     && mkdir /build_root/qbittorrent-build
 
 FROM base AS boost
@@ -116,6 +116,9 @@ RUN source '/root/.bashrc' \
     && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 -DCMAKE_EXE_LINKER_FLAGS="-static" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DOPENSSL_INCLUDE_DIR=/usr/include/openssl -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.a -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.a -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/lib/libz.a \
     # && cmake -G "Ninja" -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -DGUI=OFF -DVERBOSE_CONFIGURE=ON -DWEBUI=ON -DSTACKTRACE=OFF -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar -DBoost_DIR=/build_root/qbittorrent-build/lib/cmake/Boost-1.74.0 -DCMAKE_EXE_LINKER_FLAGS="-static" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
     && for i in {1..4}; do sed -i -E 's![\ \"\'"'"'][^\ \"\'"'"']+?\.so[\ \"\'"'"']! !g' 'build/build.ninja'; done \
+    # && if ! grep LINK_FLAGS 'build/build.ninja' | grep -Fqw 'static-pie'; then sed -i -E 's!([\t ]+LINK_FLAGS.+)!\1 -static-pie!' 'build/build.ninja'; fi \
+    # && sed -i -E -e 's!([\t ]+LINK_FLAGS).+!\1_MARK_REPLACE_ME!' -e 's!([\t ]+LINK_FLAGS)_MARK_REPLACE_ME!\1 = -static -Xlinker "-static-pie"!' 'build/build.ninja' \
+    # && grep LINK_FLAGS 'build/build.ninja' \
     && cmake --build build \
     && cmake --install build \
     && strip /build_root/qbittorrent-build/bin/qbittorrent-nox \
