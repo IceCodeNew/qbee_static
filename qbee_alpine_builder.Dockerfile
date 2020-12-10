@@ -63,7 +63,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ### curl -sS -H "Accept: application/vnd.github.v3+json" \
 ###     'https://api.github.com/repos/qt/qtbase/tags?per_page=32' |
 ###     grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
-###     sort -Vr | head -n 1
+###     grep -E '^v5' | sort -Vr | head -n 1
 ENV qt_latest_tag_name='v5.15.1'
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
