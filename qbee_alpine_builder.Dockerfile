@@ -51,7 +51,7 @@ RUN source '/root/.bashrc' \
     && curl -sS "https://github.com/arvidn/libtorrent/archive/RC_1_2.tar.gz" | bsdtar -xf- -C libtorrent --strip-components 1 \
     && pushd libtorrent || exit 1 \
     # && /build_root/boost/b2 -j"$(nproc)" address-model=64 variant=release threading=multi link=static runtime-link=static cxxflags="${CXXFLAGS}" cflags="${CFLAGS}" linkflags="${LDFLAGS}" toolset=gcc dht=on i2p=on extensions=on encryption=on crypto=openssl openssl-lib="/usr/lib" openssl-include="/usr/include/openssl" deprecated-functions=off fpic=on boost-link=static install --prefix="/build_root/qbittorrent-build" \
-    && cmake -G "Ninja" -B build -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -Dencryption=ON \
+    && cmake -G "Ninja" -B build -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -Dencryption=ON -Ddeprecated-functions=OFF \
     && cmake --build build \
     && cmake --install build \
     && popd || exit 1 \
