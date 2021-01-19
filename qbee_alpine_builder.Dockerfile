@@ -129,7 +129,7 @@ RUN source '/root/.bashrc' \
     && rm -rf -- "/build_root/qbee" \
     && dirs -c
 
-FROM quay.io/icecodenew/alpine:edge AS collection
+FROM quay.io/icecodenew/alpine:latest AS collection
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 # date +%s
 ARG cachebust=1607047147
