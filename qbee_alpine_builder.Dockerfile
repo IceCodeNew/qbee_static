@@ -1,6 +1,6 @@
 FROM quay.io/icecodenew/builder_image_x86_64-linux:alpine AS base
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-ENV build_base_date='2020-12-06' \
+ENV build_base_date=2021-03-10 \
     PKG_CONFIG=/usr/bin/pkgconf \
     PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig
 RUN source '/root/.bashrc' \
@@ -19,7 +19,7 @@ RUN source '/root/.bashrc' \
 
 FROM base AS boost
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-ENV boost_version='1.74.0' \
+ENV boost_version=1.75.0 \
     BOOST_ROOT="/build_root/boost" \
     BOOST_INCLUDEDIR="/build_root/boost" \
     BOOST_BUILD_PATH="/build_root/boost"
@@ -64,7 +64,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ###     'https://api.github.com/repos/qt/qtbase/tags?per_page=32' |
 ###     grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
 ###     grep -E '^v5' | sort -Vr | head -n 1
-ENV qt_latest_tag_name='v5.15.1'
+ENV qt_latest_tag_name=v5.15.2
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \
@@ -132,7 +132,7 @@ RUN source '/root/.bashrc' \
 FROM quay.io/icecodenew/alpine:latest AS collection
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 # date +%s
-ARG cachebust=1607047147
+ARG cachebust=1615385909
 COPY --from=qbee /build_root/qbittorrent-build/bin/qbittorrent-nox /build_root/qbittorrent-build/bin/qbittorrent-nox
 RUN apk update; apk --no-progress --no-cache add \
     bash coreutils curl file; \
