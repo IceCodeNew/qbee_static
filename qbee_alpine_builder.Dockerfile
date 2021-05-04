@@ -31,7 +31,7 @@ RUN source '/root/.bashrc' \
     && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -static-libgcc -static-libstdc++ -L/build_root/qbittorrent-build/lib" \
     # && export LDFLAGS=" -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs --static -static -Wl,--no-as-needed -L/build_root/qbittorrent-build/lib -lpthread -pthread" \
     && mkdir boost \
-    && curl -sS "https://dl.bintray.com/boostorg/release/${boost_version}/source/boost_${boost_version//./_}.tar.bz2" | bsdtar -xf- -C boost --strip-components 1 \
+    && curl -sS "https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/boost_${boost_version//./_}.tar.bz2" | bsdtar -xf- -C boost --strip-components 1 \
     && pushd boost || exit 1 \
     && /build_root/boost/bootstrap.sh \
     && /build_root/boost/b2 -j"$(nproc)" address-model=64 variant=release threading=multi link=static runtime-link=static cxxflags="${CXXFLAGS}" cflags="${CFLAGS}" linkflags="${LDFLAGS}" toolset=gcc install --prefix="/build_root/qbittorrent-build" \
