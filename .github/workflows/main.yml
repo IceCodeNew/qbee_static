@@ -49,11 +49,11 @@ jobs:
           git config --local user.email "action@github.com"
           git checkout release
           git reset --hard origin/master
-          sed -i -E "s/^ENV build_base_date=[^\ ]+/ENV build_base_date=${build_base_date:?empty value}/" qbee_alpine_builder.Dockerfile
-          sed -i -E "s/^ENV boost_version=[^\ ]+/ENV boost_version=${boost_version:?empty value}/" qbee_alpine_builder.Dockerfile
-          sed -i -E "s/^ENV qt_latest_tag_name=.+/ENV qt_latest_tag_name=${qt_latest_tag_name:?empty value}/" qbee_alpine_builder.Dockerfile
-          sed -i -E "s/^ARG cachebust=.+/ARG cachebust=${cachebust:?empty value}/" qbee_alpine_builder.Dockerfile
-          git add qbee_alpine_builder.Dockerfile
+          sed -i -E "s/^ENV build_base_date=[^\ ]+/ENV build_base_date=${build_base_date:?empty value}/" qbee_alpine_build_base.Dockerfile
+          sed -i -E "s/^ENV boost_version=[^\ ]+/ENV boost_version=${boost_version:?empty value}/" qbee_alpine_build_base.Dockerfile
+          sed -i -E "s/^ENV qt_latest_tag_name=.+/ENV qt_latest_tag_name=${qt_latest_tag_name:?empty value}/" qbee_alpine_build_base.Dockerfile
+          sed -i -E "s/^ARG cachebust=.+/ARG cachebust=${cachebust:?empty value}/" qbee.Dockerfile
+          git add qbee_alpine_build_base.Dockerfile
           git rm release.Dockerfile
           git rm -r .github
           git commit -m "${{ env.RELEASE_NAME }}"
