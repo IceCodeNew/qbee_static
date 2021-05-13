@@ -1,9 +1,9 @@
-name: Bump
+name: UpdateBuildBase
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "15 0 * * *"
+  schedule:
+    - cron: "15 23 */3 * *"
   push:
     branches:
       - master
@@ -17,8 +17,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "Bump"
-  Bump:
+  # This workflow contains a single job called "UpdateBuildBase"
+  UpdateBuildBase:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -40,21 +40,19 @@ jobs:
                 'https://api.github.com/repos/qt/qtbase/tags?per_page=32' |
                 grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
                 grep -E '^v5' | sort -Vr | head -n 1)" >> $GITHUB_ENV
-          echo "cachebust=$(date +%s)" >> $GITHUB_ENV
         shell: bash
       # Runs a set of commands using the runners shell
-      - name: Force push `release` branch
+      - name: Force push `build_base` branch
         run: |
           git config --local user.name "actions"
           git config --local user.email "action@github.com"
-          git checkout release
+          git checkout build_base
           git reset --hard origin/master
           sed -i -E "s/^ENV build_base_date=[^\ ]+/ENV build_base_date=${build_base_date:?empty value}/" qbee_alpine_build_base.Dockerfile
           sed -i -E "s/^ENV boost_version=[^\ ]+/ENV boost_version=${boost_version:?empty value}/" qbee_alpine_build_base.Dockerfile
           sed -i -E "s/^ENV qt_latest_tag_name=.+/ENV qt_latest_tag_name=${qt_latest_tag_name:?empty value}/" qbee_alpine_build_base.Dockerfile
-          sed -i -E "s/^ARG cachebust=.+/ARG cachebust=${cachebust:?empty value}/" qbee.Dockerfile
           git add qbee_alpine_build_base.Dockerfile
-          git rm release.Dockerfile
+          git rm release.Dockerfile qbee.Dockerfile
           git rm -r .github
           git commit -m "${{ env.RELEASE_NAME }}"
-          git push -f -u origin release
+          git push -f -u origin build_base
