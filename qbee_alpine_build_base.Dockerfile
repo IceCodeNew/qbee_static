@@ -54,6 +54,8 @@ RUN source '/root/.bashrc' \
 
 FROM boost AS libtorrent-rasterbar
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# https://api.github.com/repos/arvidn/libtorrent/commits?sha=RC_1_2&per_page=1
+ARG libtorrent_latest_commit_hash='33a10d5a723a6c27d9baee7d9bf2028eb81c88ed'
 WORKDIR /build_root
 RUN source '/root/.bashrc' \
     && export PATH=/build_root/qbittorrent-build/bin:$PATH \

@@ -36,6 +36,9 @@ jobs:
                 'https://api.github.com/repos/boostorg/boost/tags?per_page=32' |
                 grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
                 sed 's/boost-//' | sort -Vr | head -n 1)" >> $GITHUB_ENV
+          echo "libtorrent_latest_commit_hash=$(curl -sL -H 'Accept: application/vnd.github.v3+json' \
+                'https://api.github.com/repos/arvidn/libtorrent/commits?sha=RC_1_2&per_page=1' |
+                grep -Fm1 'sha' | cut -d'"' -f4)" >> $GITHUB_ENV
           echo "qt_latest_tag_name=$(curl -sSL -H 'Accept: application/vnd.github.v3+json' \
                 'https://api.github.com/repos/qt/qtbase/tags?per_page=32' |
                 grep 'name' | cut -d\" -f4 | grep -vE 'alpha|beta|rc|test|week' |
@@ -50,6 +53,7 @@ jobs:
           git reset --hard origin/master
           sed -i -E "s/^ENV build_base_date=[^\ ]+/ENV build_base_date=${build_base_date:?empty value}/" qbee_alpine_build_base.Dockerfile
           sed -i -E "s/^ENV boost_version=[^\ ]+/ENV boost_version=${boost_version:?empty value}/" qbee_alpine_build_base.Dockerfile
+          sed -i -E "s/^ENV libtorrent_latest_commit_hash=.+/ENV libtorrent_latest_commit_hash=${libtorrent_latest_commit_hash:?empty value}/" qbee_alpine_build_base.Dockerfile
           sed -i -E "s/^ENV qt_latest_tag_name=.+/ENV qt_latest_tag_name=${qt_latest_tag_name:?empty value}/" qbee_alpine_build_base.Dockerfile
           git add qbee_alpine_build_base.Dockerfile
           git rm release.Dockerfile qbee.Dockerfile
