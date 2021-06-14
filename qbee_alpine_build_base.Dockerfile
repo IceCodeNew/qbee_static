@@ -1,5 +1,6 @@
 FROM quay.io/icecodenew/alpine:latest AS base
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+ARG build_base_date='2021-06'
 # https://api.github.com/repos/IceCodeNew/myrc/commits?per_page=1&path=.bashrc
 ARG bashrc_latest_commit_hash=5099c0e08cb1712bde0c90e847b7ebedcb9088ce
 ## curl -sSL "https://ftpmirror.gnu.org/parallel/" | tr -d '\r\n\t' | grep -Po '(?<=parallel-)[0-9]+(?=\.tar\.bz2)' | sort -Vr | tail -n 1
