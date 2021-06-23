@@ -1,20 +1,20 @@
-FROM quay.io/icecodenew/alpine:latest AS base
+FROM quay.io/icecodenew/alpine:3.13.4 AS base
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 ARG build_base_date='2021-06'
 # https://api.github.com/repos/IceCodeNew/myrc/commits?per_page=1&path=.bashrc
-ARG bashrc_latest_commit_hash=5099c0e08cb1712bde0c90e847b7ebedcb9088ce
+ARG bashrc_latest_commit_hash=26e1679c472afc51683c7c89296490739c5d871b
 ## curl -sSL "https://ftpmirror.gnu.org/parallel/" | tr -d '\r\n\t' | grep -Po '(?<=parallel-)[0-9]+(?=\.tar\.bz2)' | sort -Vr | tail -n 1
-ARG parallel_version=20210422
+ARG parallel_version='20210722'
 ## curl -sSL 'https://raw.githubusercontent.com/openssl/openssl/OpenSSL_1_1_1-stable/README' | grep -Eo '1.1.1.*'
-ARG openssl_latest_tag_name=1.1.1l-dev
+ARG openssl_latest_tag_name='1.1.1l-dev'
 # https://api.github.com/repos/Kitware/CMake/releases/latest
-ARG cmake_latest_tag_name=v3.20.2
+ARG cmake_latest_tag_name='v3.21.1'
 # https://api.github.com/repos/ninja-build/ninja/releases/latest
-ARG ninja_latest_tag_name=v1.10.2
+ARG ninja_latest_tag_name='v1.10.2'
 # https://api.github.com/repos/sabotage-linux/netbsd-curses/releases/latest
-ARG netbsd_curses_tag_name=0.3.1
+ARG netbsd_curses_tag_name='0.3.2'
 # https://api.github.com/repos/sabotage-linux/gettext-tiny/releases/latest
-ARG gettext_tiny_tag_name=0.3.2
+ARG gettext_tiny_tag_name='0.3.2'
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
