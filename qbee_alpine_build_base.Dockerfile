@@ -23,9 +23,9 @@ ENV LANG=C.UTF-8 \
     PKG_CONFIG=/usr/bin/pkgconf \
     PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig
 
+#     apk --no-progress --no-cache upgrade; \
 RUN apk update; apk --no-progress --no-cache add \
     apk-tools autoconf automake bash binutils build-base ca-certificates cmake coreutils curl dos2unix file gettext-tiny-dev git grep libarchive-tools libedit-dev libedit-static libtool linux-headers musl musl-dev musl-libintl musl-utils ncurses ncurses-dev ncurses-static openssl openssl-dev openssl-libs-static parallel perl pkgconf samurai sed util-linux zlib-dev zlib-static; \
-    apk --no-progress --no-cache upgrade; \
     rm -rf /var/cache/apk/*; \
     curl -sSLR4q --retry 5 --retry-delay 10 --retry-max-time 60 -o '/root/.bashrc' "https://raw.githubusercontent.com/IceCodeNew/myrc/${bashrc_latest_commit_hash}/.bashrc"; \
     mkdir -p '/build_root/qbittorrent-build'; \
