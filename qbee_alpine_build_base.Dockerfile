@@ -1,4 +1,4 @@
-FROM quay.io/icecodenew/alpine:3.13.4 AS base
+FROM quay.io/icecodenew/alpine:latest AS base
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 ARG build_base_date='2021-06'
 # https://api.github.com/repos/IceCodeNew/myrc/commits?per_page=1&path=.bashrc
