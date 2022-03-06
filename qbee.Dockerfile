@@ -7,7 +7,7 @@ WORKDIR $dockerfile_workdir
 RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://github.com/IceCodeNew/qBittorrent-Enhanced-Edition/archive/v4_4_x.tar.gz" | bsdtar -xf- --strip-components 1 \
     && CFLAGS="$CFLAGS -fPIC" \
     && CXXFLAGS="$CXXFLAGS -fPIC" \
-    && LDFLAGS="-pie -s" \
+    && LDFLAGS="-static -s" \
     && export CFLAGS CXXFLAGS LDFLAGS \
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -G Ninja -B build \
     -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_SKIP_RPATH=ON -DCMAKE_SKIP_INSTALL_RPATH=ON -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
