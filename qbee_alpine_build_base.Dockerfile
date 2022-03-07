@@ -1,4 +1,4 @@
-FROM quay.io/icecodenew/alpine:latest AS base
+FROM quay.io/icecodenew/builder_image_x86_64-linux:alpine AS base
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 ARG image_build_date='2022-03-06'
 
@@ -8,25 +8,19 @@ ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     PKG_CONFIG=/usr/bin/pkgconf \
     PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig \
-    CFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs' \
-    CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs'
+    # LDFLAGS='-fuse-ld=lld' \
     # CFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs -Wl,--icf=all' \
     # CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs -Wl,--icf=all'
-    # LDFLAGS='-fuse-ld=mold' \
+    CFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs' \
+    CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs'
 
 RUN apk update; apk --no-progress --no-cache add \
-    bash build-base ca-certificates cmake coreutils curl git grep icu-dev icu-static libarchive-tools libexecinfo-static linux-headers musl musl-dev musl-utils openssl openssl-dev openssl-libs-static parallel perl pkgconf samurai sed zlib-dev zlib-static \
+    libexecinfo-static \
+    icu-dev icu-static \
     boost-dev boost1.77-static; \
     apk --no-progress --no-cache upgrade; \
     rm -rf /var/cache/apk/*; \
-    unset -f curl; \
-    eval 'curl() { /usr/bin/curl -fL --retry 5 --retry-delay 10 --retry-max-time 60 "$@"; }'; \
-    curl -sS -o '/usr/bin/checksec' "https://raw.githubusercontent.com/slimm609/checksec.sh/${checksec_latest_tag_name:=master}/checksec"; \
-    chmod +x '/usr/bin/checksec'; \
-    sed -i 's!/bin/ash!/bin/bash!' /etc/passwd; \
-    mkdir -p '/build_root/qbittorrent-build'; \
-    mkdir -p "$HOME/.parallel"; \
-    touch "$HOME/.parallel/will-cite"
+    mkdir -p '/build_root/qbittorrent-build'
 
 FROM base AS libtorrent-rasterbar
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -62,7 +56,7 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -G Ninja -B build \
     -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_SKIP_RPATH=ON -DCMAKE_SKIP_INSTALL_RPATH=ON -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
     -DOPENSSL_INCLUDE_DIR=/usr/include/openssl -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.a -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.a \
-    -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/lib/libz.a \
+    -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/usr/lib/libz.a \
     -DBUILD_SHARED_LIBS=OFF -DFEATURE_static_runtime=ON \
     -DQT_FEATURE_optimize_full=ON -DQT_FEATURE_static=ON -DQT_FEATURE_shared=OFF \
     -DFEATURE_gui=OFF -DQT_FEATURE_openssl_linked=ON -DQT_FEATURE_dbus=OFF -DQT_FEATURE_system_pcre2=OFF -DQT_FEATURE_widgets=OFF -DQT_FEATURE_testlib=OFF \
@@ -90,7 +84,7 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -G Ninja -B build \
     -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_SKIP_RPATH=ON -DCMAKE_SKIP_INSTALL_RPATH=ON -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
     -DOPENSSL_INCLUDE_DIR=/usr/include/openssl -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.a -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.a \
-    -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/lib/libz.a \
+    -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/usr/lib/libz.a \
     -DBUILD_SHARED_LIBS=OFF -DFEATURE_static_runtime=ON \
     -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
     && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
