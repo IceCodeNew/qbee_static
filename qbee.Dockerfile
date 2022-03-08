@@ -16,8 +16,9 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://github.co
     -DLibtorrentRasterbar_DIR=/build_root/qbittorrent-build/lib64/cmake/LibtorrentRasterbar \
     -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
     && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
-    && cmake --build build --parallel \
+    && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
+    && readelf -p .comment /build_root/qbittorrent-build/bin/qbittorrent-nox \
     && rm -rf -- "$dockerfile_workdir"
 
 FROM quay.io/icecodenew/alpine:latest AS collection

@@ -4,15 +4,10 @@ ARG image_build_date='2022-03-06'
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8 \
-    PKG_CONFIG=/usr/bin/pkgconf \
-    PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig \
-    # LDFLAGS='-fuse-ld=lld' \
+ENV PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig
+    # LDFLAGS='-fuse-ld=mold' \
     # CFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs -Wl,--icf=all' \
     # CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs -Wl,--icf=all'
-    CFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs' \
-    CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs'
 
 RUN apk update; apk --no-progress --no-cache add \
     libexecinfo-static \
@@ -35,7 +30,7 @@ RUN git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules 
     && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/build_root/qbittorrent-build -G Ninja -B build \
     -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_SKIP_RPATH=ON -DCMAKE_SKIP_INSTALL_RPATH=ON -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" \
     -DBUILD_SHARED_LIBS=OFF -Dstatic_runtime=ON -Dencryption=ON -Ddeprecated-functions=OFF \
-    && cmake --build build --parallel \
+    && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
     && rm -rf -- "$dockerfile_workdir"
 
@@ -63,7 +58,7 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF \
     -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
     && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
-    && cmake --build build --parallel \
+    && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
     && rm -rf -- "$dockerfile_workdir"
 
@@ -88,6 +83,6 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     -DBUILD_SHARED_LIBS=OFF -DFEATURE_static_runtime=ON \
     -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
     && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
-    && cmake --build build --parallel \
+    && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
     && rm -rf -- "$dockerfile_workdir"
