@@ -25,6 +25,6 @@ FROM quay.io/icecodenew/alpine:latest AS collection
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 COPY --from=qbee /build_root/qbittorrent-build/bin/qbittorrent-nox /build_root/qbittorrent-build/bin/qbittorrent-nox
 RUN apk update; apk --no-progress --no-cache add \
-    bash coreutils curl file; \
+    bash coreutils curl file git; \
     apk --no-progress --no-cache upgrade; \
     rm -rf /var/cache/apk/*
