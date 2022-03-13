@@ -29,6 +29,7 @@ RUN --mount=type=secret,id=GIT_AUTH_TOKEN,dst=/tmp/secret_token export GITHUB_TO
     && github-release release \
     --user IceCodeNew \
     --repo qBittorrent-Enhanced-Edition \
+    --pre-release \
     --tag "$TAG_NAME" \
     --name "$TAG_NAME"; \
     sleep 3s \
