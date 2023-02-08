@@ -10,9 +10,8 @@ ENV PKG_CONFIG_PATH=/build_root/qbittorrent-build/lib/pkgconfig
     # CXXFLAGS='-O2 -pipe -D_FORTIFY_SOURCE=2 -fexceptions -fstack-clash-protection -fstack-protector-strong -g -grecord-gcc-switches -Wl,-z,noexecstack,-z,relro,-z,now,-z,defs -Wl,--icf=all'
 
 RUN apk update; apk --no-progress --no-cache add \
-    libexecinfo-static \
     icu-dev icu-static \
-    boost-dev boost1.77-static; \
+    boost-dev boost1.80-static; \
     apk --no-progress --no-cache upgrade; \
     rm -rf /var/cache/apk/*; \
     mkdir -p '/build_root/qbittorrent-build'
@@ -56,8 +55,7 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     -DQT_FEATURE_optimize_full=ON -DQT_FEATURE_static=ON -DQT_FEATURE_shared=OFF \
     -DFEATURE_gui=OFF -DQT_FEATURE_openssl_linked=ON -DQT_FEATURE_dbus=OFF -DQT_FEATURE_system_pcre2=OFF -DQT_FEATURE_widgets=OFF -DQT_FEATURE_testlib=OFF \
     -DQT_BUILD_TESTS=OFF -DQT_BUILD_EXAMPLES=OFF \
-    -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
-    && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
+    && sed -i -E -e 's|\.so|\.a|g' build/build.ninja \
     && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
     && rm -rf -- "$dockerfile_workdir"
@@ -81,8 +79,7 @@ RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://download.
     -DOPENSSL_INCLUDE_DIR=/usr/include/openssl -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/libcrypto.a -DOPENSSL_SSL_LIBRARY=/usr/lib/libssl.a \
     -DZLIB_INCLUDE_DIR=/usr/include -DZLIB_LIBRARY=/usr/lib/libz.a \
     -DBUILD_SHARED_LIBS=OFF -DFEATURE_static_runtime=ON \
-    -DCMAKE_CXX_STANDARD_LIBRARIES=/usr/lib/libexecinfo.a \
-    && sed -i -E -e 's|/usr/lib/libexecinfo\.so||g' -e 's|\.so|\.a|g' build/build.ninja \
+    && sed -i -E -e 's|\.so|\.a|g' build/build.ninja \
     && mold -run cmake --build build --parallel \
     && cmake --install build --strip \
     && rm -rf -- "$dockerfile_workdir"
