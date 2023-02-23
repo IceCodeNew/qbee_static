@@ -1,7 +1,7 @@
 FROM quay.io/icecodenew/qbee_static:build_base AS qbee
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # https://api.github.com/repos/IceCodeNew/qBittorrent-Enhanced-Edition/commits?per_page=1
-ARG qbee_latest_commit_hash='22290226034a3ff98cf5fbdfba8a5007d970a215'
+ARG qbee_latest_commit_hash=2ec4a8efbdbeda83ea299424714598488436199d
 ARG dockerfile_workdir=/build_root/qbee
 WORKDIR $dockerfile_workdir
 RUN curl --retry 5 --retry-delay 10 --retry-max-time 60 -fsSL "https://github.com/IceCodeNew/qBittorrent-Enhanced-Edition/archive/v4_4_x.tar.gz" | bsdtar -xf- --strip-components 1 \
